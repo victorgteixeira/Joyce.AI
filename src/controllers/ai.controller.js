@@ -32,28 +32,53 @@ export async function streamController(req, res, next) {
     const { prompt } = req.body;
     if (!prompt) throw { status: 400, message: 'prompt é obrigatório' };
 
-    res.setHeader('Content-Type', 'text/event-stream');
-    res.setHeader('Cache-Control', 'no-cache');
+    res.setHeader('Content-Type', 'text/event-stream; charset=utf-8');
+    res.setHeader('Cache-Control', 'no-cache, no-transform');
     res.setHeader('Connection', 'keep-alive');
+    res.setHeader('X-Accel-Buffering', 'no');
+
+    let finished = false;
+
+
+    req.on('close', () => {
+      if (!finished) {
+        finished = true;
+        try { res.end(); } catch {}
+      }
+    });
+
+    res.write(': ping\n\n');
 
     const { retries } = await streamService(
       prompt,
-      (chunk) => res.write(`data: ${chunk}\n\n`),
-      () => res.end()
+      (chunk) => {
+        res.write(`data: ${JSON.stringify({ text: chunk })}\n\n`);
+      },
+      () => {
+        if (!finished) {
+          finished = true;
+          res.write(`event: meta\ndata: ${JSON.stringify({ retries })}\n\n`);
+          res.end();
+        }
+      }
     );
-
-    res.write(`event: meta\ndata: ${JSON.stringify({ retries })}\n\n`);
   } catch (err) {
     next(err);
   }
 }
 
+const ALLOWED_SIZES = new Set(['1024x1024','1024x1536','1536x1024','auto']);
+
 export async function imageController(req, res, next) {
   try {
-    const { prompt, size } = req.body;
+    const { prompt, size = '1024x1024' } = req.body;
     if (!prompt) throw { status: 400, message: 'prompt é obrigatório' };
+    if (!ALLOWED_SIZES.has(size)) {
+      throw { status: 400, message: `size inválido. Use um de: ${[...ALLOWED_SIZES].join(', ')}` };
+    }
+
     const { base64, retries } = await imageService(prompt, size);
-    res.json({ base64, retries });
+    res.json({ image: `data:image/png;base64,${base64}`, retries });
   } catch (err) {
     next(err);
   }

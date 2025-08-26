@@ -1,4 +1,5 @@
 import { Router } from 'express';
+import { auth } from '../middlewares/auth.js';
 import {
   chatController,
   streamController,
@@ -8,9 +9,9 @@ import {
 
 const router = Router();
 
-router.post('/chat', chatController);
-router.post('/stream', streamController);
-router.post('/image', imageController);
-router.post('/embeddings', embeddingController);
+router.post('/chat',       auth, chatController);
+router.post('/stream',     auth, streamController);
+router.post('/image',      auth, imageController);
+router.post('/embeddings', auth, embeddingController);
 
 export default router;

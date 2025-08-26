@@ -9,10 +9,14 @@ async function callWithRetry(fn, retries = 3, delay = 2000, attempt = 0) {
     const result = await fn();
     return { ...result, retries: attempt };
   } catch (err) {
-    if (err?.status === 429 && retries > 0) {
-      console.warn(`[WARN] 429. Tentando novamente (${attempt + 1}) em ${delay}ms...`);
+    const retriableCodes = [429, 500, 502, 503, 504];
+    const status = err?.status ?? err?.response?.status ?? err?.code;
+
+    if (retriableCodes.includes(status) && retries > 0) {
+      const nextDelay = delay * 2; 
+      console.warn(`[WARN] ${status}. Retry ${attempt + 1} em ${delay}ms...`);
       await sleep(delay);
-      return callWithRetry(fn, retries - 1, delay * 2, attempt + 1);
+      return callWithRetry(fn, retries - 1, nextDelay, attempt + 1);
     }
     err.retries = attempt;
     throw err;
@@ -37,10 +41,12 @@ export async function streamService(prompt, onText, onEnd) {
       input: prompt,
       max_output_tokens: 300
     });
-    stream.on('text', onText);
-    stream.on('end', onEnd);
-    stream.on('error', (e) => { throw e; });
-    return {};
+
+    return await new Promise((resolve, reject) => {
+      stream.on('text', onText);
+      stream.on('end', () => { try { onEnd(); } catch {} ; resolve({}); });
+      stream.on('error', (e) => reject(e));
+    });
   });
 }
 
