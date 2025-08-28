@@ -1,9 +1,10 @@
 import { useState, type FormEvent } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
-import { FiMail, FiLock, FiEye, FiEyeOff, FiUserPlus } from 'react-icons/fi';
+import { FiMail, FiLock, FiEye, FiEyeOff, FiUserPlus, FiUser } from 'react-icons/fi';
 
 const RegisterPage = () => {
+  const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -27,7 +28,7 @@ const RegisterPage = () => {
     setIsLoading(true);
     
     try {
-      await register(email, password);
+      await register(name, email, password);
       navigate('/chat/new');
     } catch (error: any) {
       setErrorMessage(error.response?.data?.message || 'Failed to register. Please try again.');
@@ -69,6 +70,29 @@ const RegisterPage = () => {
                 <span className="block sm:inline text-sm">{errorMessage}</span>
               </div>
             )}
+            
+            {/* Name field */}
+            <div className="space-y-2">
+              <label htmlFor="name" className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                Nome
+              </label>
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                   <FiUser className="h-5 w-5 text-gray-400" />
+                 </div>
+                <input
+                  id="name"
+                  name="name"
+                  type="text"
+                  autoComplete="name"
+                  required
+                  className="block w-full pl-10 pr-3 py-3 border border-gray-300 dark:border-gray-600 rounded-xl placeholder-gray-500 dark:placeholder-gray-400 text-gray-900 dark:text-white bg-white dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200 hover:border-gray-400 dark:hover:border-gray-500"
+                  placeholder="Seu nome"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                />
+              </div>
+            </div>
             
             {/* Email field */}
             <div className="space-y-2">

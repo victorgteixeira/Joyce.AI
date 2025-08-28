@@ -17,7 +17,7 @@ interface AuthContextType {
   isLoading: boolean;
   error: string | null;
   login: (email: string, password: string) => Promise<void>;
-  register: (email: string, password: string) => Promise<void>;
+  register: (name: string, email: string, password: string) => Promise<void>;
   logout: () => void;
   clearError: () => void;
 }
@@ -103,11 +103,11 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     }
   };
 
-  const register = async (email: string, password: string) => {
+  const register = async (name: string, email: string, password: string) => {
     try {
       setLoading(true);
       setError(null);
-      await api.post('/auth/register', { email, password });
+      await api.post('/auth/register', { name, email, password });
       await login(email, password);
     } catch (err: any) {
       setError(err?.response?.data?.message || 'Failed to register');

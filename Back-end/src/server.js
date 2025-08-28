@@ -23,4 +23,8 @@ app.use('/conversations', conversationRoutes);
 app.use(errorHandler);
 
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`API rodando em http://localhost:${PORT}`));
+const HOST = process.env.HOST || '0.0.0.0';
+app.listen(PORT, HOST, () => {
+  console.log(`API rodando em http://localhost:${PORT}`);
+  console.log(`API acessível na rede em http://${HOST}:${PORT}`);
+});
