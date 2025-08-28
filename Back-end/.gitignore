@@ -1,0 +1,63 @@
+# === Node.js ===
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Logs
+logs/
+*.log
+*.log.*
+*.out
+*.pid
+*.seed
+*.pid.lock
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+lib-cov
+coverage/
+.nyc_output/
+
+# Build output
+dist/
+build/
+.cache/
+.next/
+out/
+
+# === Prisma ===
+# Client gerado (pode ser recriado com `prisma generate`)
+/node_modules/.prisma/
+.prisma/
+
+# Migrations ficam versionadas
+# /prisma/migrations/  <- NÃO ignore! importante pro histórico do schema
+
+# === Env & Secrets ===
+.env
+.env.*.local
+.env.local
+.env.test
+.env.production
+
+# === VSCode / IDE ===
+.vscode/
+.idea/
+*.swp
+
+# === OS files ===
+.DS_Store
+Thumbs.db
+
+# === Optional (se usar Docker) ===
+/docker-data/
+/docker-compose.override.yml
+
+# === Optional (se usar PM2 ou outros managers) ===
+.pm2/
