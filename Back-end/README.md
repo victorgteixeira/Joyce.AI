@@ -12,7 +12,7 @@ A API já vem com:
 - **Retry automático** em caso de erro `429 Too Many Requests` (com backoff exponencial).  
 - **Controle de tokens de saída** com `max_output_tokens` para reduzir custo.  
 - Documentação dos endpoints para fácil integração via Postman ou outra ferramenta.
-
+ 
 ---
 
 ## 🚀 Tecnologias
