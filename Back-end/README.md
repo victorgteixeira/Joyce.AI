@@ -14,7 +14,7 @@ A API já vem com:
 - Documentação dos endpoints para fácil integração via Postman ou outra ferramenta.
  
 ---
-
+ 
 ## 🚀 Tecnologias
 - [Node.js](https://nodejs.org/)  
 - [Express](https://expressjs.com/)  
