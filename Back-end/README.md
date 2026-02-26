@@ -1,4 +1,4 @@
-# 🤖 Joyce.AI 
+# 🤖 Joyce.AI
 
 **Joyce.AI** é uma API em **Node.js (Express)** que atua como um **proxy para a OpenAI**, oferecendo endpoints para:
 
